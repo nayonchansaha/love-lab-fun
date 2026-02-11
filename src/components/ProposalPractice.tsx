@@ -23,7 +23,7 @@ interface Props {
 }
 
 const ProposalPractice = ({ nickname }: Props) => {
-  const [phase, setPhase] = useState<"idle" | "recording" | "analyzing" | "result" | "used">("idle");
+  const [phase, setPhase] = useState<"idle" | "recording" | "analyzing" | "result">("idle");
   const [seconds, setSeconds] = useState(0);
   const [cameraError, setCameraError] = useState(false);
   const [result, setResult] = useState<{ confidence: number; stars: number; feedback: string[] } | null>(null);
@@ -39,11 +39,6 @@ const ProposalPractice = ({ nickname }: Props) => {
     }
   }, []);
 
-  useEffect(() => {
-    if (localStorage.getItem(PROPOSAL_USED_KEY) === "true") {
-      setPhase("used");
-    }
-  }, []);
 
   const startCamera = useCallback(async () => {
     try {
@@ -92,7 +87,7 @@ const ProposalPractice = ({ nickname }: Props) => {
       const feedbackCount = Math.random() > 0.5 ? 3 : 2;
       const feedback = pickRandom(feedbackPool, feedbackCount);
 
-      localStorage.setItem(PROPOSAL_USED_KEY, "true");
+      
       setResult({ confidence, stars: Math.min(5, stars), feedback });
       setPhase("result");
     }, 2500);
@@ -106,27 +101,6 @@ const ProposalPractice = ({ nickname }: Props) => {
   const formatTime = (s: number) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
 
   // Used state
-  if (phase === "used") {
-    return (
-      <div className="max-w-md mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="glass-card rounded-2xl p-8 text-center space-y-6 relative overflow-hidden"
-        >
-          <motion.div animate={{ scale: [1, 1.1, 1] }} transition={{ repeat: Infinity, duration: 2 }}>
-            <Lock className="mx-auto text-primary" size={56} />
-          </motion.div>
-          <h2 className="text-2xl font-display font-bold text-gradient">
-            তুমি ইতিমধ্যে তোমার প্রোপোজাল অ্যানালাইসিস ব্যবহার করে ফেলেছো 💘
-          </h2>
-          <p className="text-muted-foreground">
-            প্রতিটি ডিভাইসে শুধুমাত্র একবার ব্যবহার করা যায়, {nickname}!
-          </p>
-        </motion.div>
-      </div>
-    );
-  }
 
   // Idle
   if (phase === "idle") {
