@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Share2 } from "lucide-react";
+import { shareResult } from "@/lib/share";
 
 interface Question {
   question: string;
@@ -134,6 +135,14 @@ const RedFlagQuiz = ({ nickname }: Props) => {
           <h2 className={`text-3xl font-display font-bold ${result.color}`}>{result.title}</h2>
           <p className="text-foreground leading-relaxed">{result.description}</p>
           <p className="text-sm text-primary mt-1">— Result for {nickname} 💕</p>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => shareResult(`🚩 LoveLab Red Flag Test: I got ${result.title}! ${result.description}`)}
+            className="px-5 py-2.5 rounded-xl bg-secondary/60 border border-border text-foreground text-sm font-medium hover:bg-secondary transition-all flex items-center gap-2 mx-auto"
+          >
+            <Share2 size={16} /> Share Result
+          </motion.button>
           <button
             onClick={restart}
             className="w-full py-3.5 rounded-xl gradient-primary text-primary-foreground font-semibold hover:opacity-90 transition-all"

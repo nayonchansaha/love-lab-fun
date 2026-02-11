@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Heart } from "lucide-react";
+import { Heart, Share2 } from "lucide-react";
+import { shareResult } from "@/lib/share";
 
 const verdicts = [
   { min: 0, max: 20, text: "Friendzone alert 🚨", sub: "Maybe try being funnier?" },
@@ -109,6 +110,14 @@ const LoveCalculator = ({ nickname }: Props) => {
               <div className="text-xl font-semibold text-foreground">{verdict.text}</div>
               <div className="text-sm text-muted-foreground">{verdict.sub}</div>
               <div className="text-xs text-primary mt-2">— {nickname} এর জন্য 💕</div>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => shareResult(`💘 LoveLab: ${name1} ❤️ ${name2} = ${result}%! ${verdict.text} ${verdict.sub}`)}
+                className="mt-3 px-5 py-2.5 rounded-xl bg-secondary/60 border border-border text-foreground text-sm font-medium hover:bg-secondary transition-all flex items-center gap-2 mx-auto"
+              >
+                <Share2 size={16} /> Share Result
+              </motion.button>
             </motion.div>
           )}
         </AnimatePresence>
