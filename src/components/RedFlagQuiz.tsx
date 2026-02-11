@@ -71,7 +71,11 @@ const getResult = (score: number): FlagResult => {
   return { flag: "red", emoji: "🚩", color: "text-red-500", title: "Red Flag 🚩", description: "Uh oh... Some patterns here could cause trouble. Time for a heart-to-heart with yourself. Growth is sexy — start now!" };
 };
 
-const RedFlagQuiz = () => {
+interface Props {
+  nickname: string;
+}
+
+const RedFlagQuiz = ({ nickname }: Props) => {
   const [current, setCurrent] = useState(0);
   const [scores, setScores] = useState<number[]>([]);
   const [result, setResult] = useState<FlagResult | null>(null);
@@ -129,6 +133,7 @@ const RedFlagQuiz = () => {
           <div className="text-7xl">{result.emoji}</div>
           <h2 className={`text-3xl font-display font-bold ${result.color}`}>{result.title}</h2>
           <p className="text-foreground leading-relaxed">{result.description}</p>
+          <p className="text-sm text-primary mt-1">— Result for {nickname} 💕</p>
           <button
             onClick={restart}
             className="w-full py-3.5 rounded-xl gradient-primary text-primary-foreground font-semibold hover:opacity-90 transition-all"

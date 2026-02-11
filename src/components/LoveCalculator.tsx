@@ -14,7 +14,11 @@ const verdicts = [
 const getVerdict = (score: number) =>
   verdicts.find((v) => score >= v.min && score < v.max) || verdicts[0];
 
-const LoveCalculator = () => {
+interface Props {
+  nickname: string;
+}
+
+const LoveCalculator = ({ nickname }: Props) => {
   const [name1, setName1] = useState("");
   const [name2, setName2] = useState("");
   const [result, setResult] = useState<number | null>(null);
@@ -104,6 +108,7 @@ const LoveCalculator = () => {
               <div className="text-6xl font-display font-bold text-gradient">{result}%</div>
               <div className="text-xl font-semibold text-foreground">{verdict.text}</div>
               <div className="text-sm text-muted-foreground">{verdict.sub}</div>
+              <div className="text-xs text-primary mt-2">— {nickname} এর জন্য 💕</div>
             </motion.div>
           )}
         </AnimatePresence>
