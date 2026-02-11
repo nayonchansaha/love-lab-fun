@@ -1,22 +1,32 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Heart, MessageCircleHeart, Flag, Sparkles } from "lucide-react";
+import { Heart, MessageCircleHeart, Flag, Sparkles, Gem } from "lucide-react";
 import FloatingHearts from "@/components/FloatingHearts";
 import LoveCalculator from "@/components/LoveCalculator";
 import ConfessionWall from "@/components/ConfessionWall";
 import RedFlagQuiz from "@/components/RedFlagQuiz";
+import ProposalPractice from "@/components/ProposalPractice";
+import NicknameGate from "@/components/NicknameGate";
+import { useNickname } from "@/hooks/useNickname";
 
-type Tab = "calculator" | "confessions" | "quiz";
+type Tab = "calculator" | "confessions" | "quiz" | "proposal";
 
 const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
   { id: "calculator", label: "Love Calc", icon: <Heart size={18} /> },
   { id: "confessions", label: "Confessions", icon: <MessageCircleHeart size={18} /> },
   { id: "quiz", label: "Red Flags", icon: <Flag size={18} /> },
+  { id: "proposal", label: "Proposal", icon: <Gem size={18} /> },
 ];
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState<Tab>("calculator");
   const [showIntro, setShowIntro] = useState(true);
+  const { nickname, setNickname } = useNickname();
+
+  // Nickname gate - first visit
+  if (!nickname) {
+    return <NicknameGate onSelect={setNickname} />;
+  }
 
   if (showIntro) {
     return (
@@ -39,7 +49,7 @@ const Index = () => {
             LoveLab
           </h1>
           <p className="text-lg text-muted-foreground max-w-md mx-auto">
-            Calculate love, confess your feelings, and find out if you're a walking red flag — all in one place 💕
+            Welcome back, <span className="text-primary font-semibold">{nickname}</span> 💘
           </p>
           <motion.button
             whileHover={{ scale: 1.05 }}
@@ -68,16 +78,19 @@ const Index = () => {
           >
             💘 LoveLab
           </motion.h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Hey, <span className="text-primary font-medium">{nickname}</span> 💕
+          </p>
         </header>
 
         {/* Tab Navigation */}
         <nav className="flex justify-center px-4 pb-6">
-          <div className="glass-card rounded-2xl p-1.5 flex gap-1">
+          <div className="glass-card rounded-2xl p-1.5 flex gap-1 overflow-x-auto">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
                   activeTab === tab.id
                     ? "gradient-primary text-primary-foreground shadow-md"
                     : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
@@ -100,9 +113,10 @@ const Index = () => {
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.2 }}
             >
-              {activeTab === "calculator" && <LoveCalculator />}
+              {activeTab === "calculator" && <LoveCalculator nickname={nickname} />}
               {activeTab === "confessions" && <ConfessionWall />}
-              {activeTab === "quiz" && <RedFlagQuiz />}
+              {activeTab === "quiz" && <RedFlagQuiz nickname={nickname} />}
+              {activeTab === "proposal" && <ProposalPractice nickname={nickname} />}
             </motion.div>
           </AnimatePresence>
         </main>
