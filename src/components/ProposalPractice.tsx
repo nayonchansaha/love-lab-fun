@@ -94,6 +94,16 @@ const ProposalPractice = ({ nickname }: Props) => {
   }, [seconds, stopCamera]);
 
 
+  // Keep stream attached to video element across re-renders
+  useEffect(() => {
+    if (phase === "recording" && videoRef.current && streamRef.current) {
+      if (videoRef.current.srcObject !== streamRef.current) {
+        videoRef.current.srcObject = streamRef.current;
+        videoRef.current.play().catch(() => {});
+      }
+    }
+  });
+
   useEffect(() => {
     return () => stopCamera();
   }, [stopCamera]);
