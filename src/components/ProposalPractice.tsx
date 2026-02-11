@@ -41,9 +41,6 @@ const ProposalPractice = ({ nickname }: Props) => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
       streamRef.current = stream;
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
       setCameraError(false);
       setSeconds(0);
       setPhase("recording");
@@ -92,6 +89,12 @@ const ProposalPractice = ({ nickname }: Props) => {
       setPhase("result");
     }, 2500);
   }, [seconds, stopCamera]);
+
+  useEffect(() => {
+    if (phase === "recording" && videoRef.current && streamRef.current) {
+      videoRef.current.srcObject = streamRef.current;
+    }
+  }, [phase]);
 
   useEffect(() => {
     return () => stopCamera();
