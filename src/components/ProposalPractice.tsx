@@ -31,6 +31,14 @@ const ProposalPractice = ({ nickname }: Props) => {
   const streamRef = useRef<MediaStream | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  const videoCallbackRef = useCallback((node: HTMLVideoElement | null) => {
+    videoRef.current = node;
+    if (node && streamRef.current) {
+      node.srcObject = streamRef.current;
+      node.play().catch(() => {});
+    }
+  }, []);
+
   useEffect(() => {
     if (localStorage.getItem(PROPOSAL_USED_KEY) === "true") {
       setPhase("used");
@@ -90,11 +98,6 @@ const ProposalPractice = ({ nickname }: Props) => {
     }, 2500);
   }, [seconds, stopCamera]);
 
-  useEffect(() => {
-    if (phase === "recording" && videoRef.current && streamRef.current) {
-      videoRef.current.srcObject = streamRef.current;
-    }
-  }, [phase]);
 
   useEffect(() => {
     return () => stopCamera();
@@ -166,7 +169,7 @@ const ProposalPractice = ({ nickname }: Props) => {
         >
           <div className="relative rounded-2xl overflow-hidden bg-black aspect-[4/3]">
             <video
-              ref={videoRef}
+              ref={videoCallbackRef}
               autoPlay
               playsInline
               muted
