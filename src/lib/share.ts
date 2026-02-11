@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 
 export const shareResult = async (text: string) => {
-  const url = window.location.href;
+  const url = "https://lovelabfun.vercel.app";
   const shareData = { text, url };
 
   if (navigator.share) {
